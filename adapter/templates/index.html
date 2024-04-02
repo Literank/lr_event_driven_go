@@ -15,12 +15,15 @@
         <!-- Search Bar Section -->
         <div class="mb-8">
             <h2 class="text-2xl font-bold mb-4 mt-6">Search</h2>
-            <input type="text" placeholder="Search for books..." class="w-full px-4 py-2 rounded-md border-gray-300 focus:outline-none focus:border-blue-500">
+            <form class="flex">
+                <input type="text" name="q" value="{{.q}}" placeholder="Search for books..." class="flex-grow px-4 py-2 rounded-l-md border-gray-300 focus:outline-none focus:border-blue-500">
+                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-r-md">Search</button>
+            </form>
         </div>
 
         <!-- Books Section -->
         <div class="mb-8">
-            <h2 class="text-2xl font-bold mb-4">Books</h2>
+            <h2 class="text-2xl font-bold mb-4">{{if .q}}Keyword: “{{.q}}“{{else}}Books{{end}}</h2>
             <div class="grid grid-cols-4 gap-2">
                 {{range .books}}
                     <div class="bg-white p-4 rounded-md border-gray-300 shadow mt-2">

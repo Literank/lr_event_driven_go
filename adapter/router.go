@@ -50,7 +50,8 @@ func MakeRouter(templates_pattern string, wireHelper *application.WireHelper) (*
 
 // Render and show the index page
 func (r *RestHandler) indexPage(c *gin.Context) {
-	books, err := r.bookOperator.GetBooks(c, 0, "")
+	q := c.Query(fieldQuery)
+	books, err := r.bookOperator.GetBooks(c, 0, q)
 	if err != nil {
 		c.String(http.StatusNotFound, "failed to get books")
 		return
@@ -59,6 +60,7 @@ func (r *RestHandler) indexPage(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"title": "LiteRank Book Store",
 		"books": books,
+		"q":     q,
 	})
 }
 
