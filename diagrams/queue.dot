@@ -1,0 +1,14 @@
+digraph {
+    rankdir=LR; // Layout from left to right
+
+    // Node definitions
+    producer [label="Bookstore Web Service", shape=box];
+    consumer1 [label="Trend Service", shape=box];
+    consumer2 [label="Recommendation Service", shape=box];
+    queue [label="Queue\n(Events Queuing)", shape=rectangle, width=1.5, height=1, style=filled, fillcolor=navy, fontcolor=white];
+
+    // Edge definitions
+    producer -> queue [label="Search Book Event"];
+    queue -> consumer1 [label="Search Book Event"];
+    queue -> consumer2 [label="Search Book Event"];
+}
