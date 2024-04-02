@@ -1,26 +1,35 @@
 package main
 
 import (
-	"net/http"
+	"fmt"
 
-	"github.com/gin-gonic/gin"
+	"literank.com/event-books/adapter"
+	"literank.com/event-books/application"
+	"literank.com/event-books/infrastructure/config"
 )
 
+const configFileName = "config.yml"
+
 func main() {
-	// Create a new Gin router
-	router := gin.Default()
+	// Read the config
+	c, err := config.Parse(configFileName)
+	if err != nil {
+		panic(err)
+	}
 
-	// Load HTML templates from the templates directory
-	router.LoadHTMLGlob("templates/*.html")
+	// Prepare dependencies
+	wireHelper, err := application.NewWireHelper(c)
+	if err != nil {
+		panic(err)
+	}
 
-	// Define a route for the homepage
-	router.GET("/", func(c *gin.Context) {
-		// Render the HTML template named "index.html"
-		c.HTML(http.StatusOK, "index.html", gin.H{
-			"title": "LiteRank Book Store",
-		})
-	})
-
-	// Run the server, default port is 8080
-	router.Run()
+	// Build main router
+	r, err := adapter.MakeRouter(c.App.TemplatesPattern, wireHelper)
+	if err != nil {
+		panic(err)
+	}
+	// Run the server on the specified port
+	if err := r.Run(fmt.Sprintf(":%d", c.App.Port)); err != nil {
+		panic(err)
+	}
 }
