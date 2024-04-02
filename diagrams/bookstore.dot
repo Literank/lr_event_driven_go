@@ -1,0 +1,34 @@
+digraph BookShopLayout {
+    // Define nodes
+    node [shape=plaintext]
+    Website [label="Book Store Website"]
+    
+    SearchSection [label=<
+        <table border="0" cellborder="1" cellspacing="0">
+            <tr><td bgcolor="lightseagreen">Search Bar</td></tr>
+            <tr><td>Search with keywords</td></tr>
+            <tr><td>Show search results</td></tr>
+        </table>
+    >]
+
+    TrendSection [label=<
+        <table border="0" cellborder="1" cellspacing="0">
+            <tr><td bgcolor="lightyellow">Trends</td></tr>
+            <tr><td>Latest Trends</td></tr>
+            <tr><td>Popular Books</td></tr>
+        </table>
+    >]
+
+    RecommendedSection [label=<
+        <table border="0" cellborder="1" cellspacing="0">
+            <tr><td bgcolor="lightblue">Recommended for You</td></tr>
+            <tr><td>Based on Your Search Interests</td></tr>
+            <tr><td>Similar to Your Previous Purchases</td></tr>
+        </table>
+    >]
+
+    // Define connections
+    Website -> TrendSection [label="Displays"]
+    Website -> RecommendedSection [label="Displays"]
+    Website -> SearchSection [label="Has"]
+}
