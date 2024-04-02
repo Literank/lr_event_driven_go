@@ -15,7 +15,7 @@ func main() {
 
 	// Define a route for the homepage
 	router.GET("/", func(c *gin.Context) {
-		// Render the HTML template named "index.tmpl"
+		// Render the HTML template named "index.html"
 		c.HTML(http.StatusOK, "index.html", gin.H{
 			"title": "LiteRank Book Store",
 		})
