@@ -29,3 +29,8 @@ func (o *BookOperator) CreateBook(ctx context.Context, b *model.Book) (*model.Bo
 	b.ID = id
 	return b, nil
 }
+
+// GetBooks gets a list of books by offset and keyword, and caches its result if needed
+func (o *BookOperator) GetBooks(ctx context.Context, offset int, query string) ([]*model.Book, error) {
+	return o.bookManager.GetBooks(ctx, offset, query)
+}

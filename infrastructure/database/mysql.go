@@ -39,3 +39,17 @@ func (s *MySQLPersistence) CreateBook(ctx context.Context, b *model.Book) (uint,
 	}
 	return b.ID, nil
 }
+
+// GetBooks gets a list of books by offset and keyword
+func (s *MySQLPersistence) GetBooks(ctx context.Context, offset int, keyword string) ([]*model.Book, error) {
+	books := make([]*model.Book, 0)
+	tx := s.db.WithContext(ctx)
+	if keyword != "" {
+		term := "%" + keyword + "%"
+		tx = tx.Where("title LIKE ?", term).Or("author LIKE ?", term).Or("description LIKE ?", term)
+	}
+	if err := tx.Offset(offset).Limit(s.pageSize).Find(&books).Error; err != nil {
+		return nil, err
+	}
+	return books, nil
+}

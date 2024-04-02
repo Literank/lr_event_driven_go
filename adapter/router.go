@@ -6,12 +6,18 @@ package adapter
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 
 	"literank.com/event-books/application"
 	"literank.com/event-books/application/executor"
 	"literank.com/event-books/domain/model"
+)
+
+const (
+	fieldOffset = "o"
+	fieldQuery  = "q"
 )
 
 // RestHandler handles all restful requests
@@ -37,6 +43,7 @@ func MakeRouter(templates_pattern string, wireHelper *application.WireHelper) (*
 	r.GET("/", rest.indexPage)
 
 	apiGroup := r.Group("/api")
+	apiGroup.GET("/books", rest.getBooks)
 	apiGroup.POST("/books", rest.createBook)
 	return r, nil
 }
@@ -47,6 +54,27 @@ func (r *RestHandler) indexPage(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"title": "LiteRank Book Store",
 	})
+}
+
+// Get all books
+func (r *RestHandler) getBooks(c *gin.Context) {
+	offset := 0
+	offsetParam := c.Query(fieldOffset)
+	if offsetParam != "" {
+		value, err := strconv.Atoi(offsetParam)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid offset"})
+			return
+		}
+		offset = value
+	}
+	books, err := r.bookOperator.GetBooks(c, offset, c.Query(fieldQuery))
+	if err != nil {
+		fmt.Printf("Failed to get books: %v\n", err)
+		c.JSON(http.StatusNotFound, gin.H{"error": "failed to get books"})
+		return
+	}
+	c.JSON(http.StatusOK, books)
 }
 
 // Create a new book
