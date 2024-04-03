@@ -7,11 +7,13 @@ import (
 	"literank.com/event-books/domain/gateway"
 	"literank.com/event-books/infrastructure/config"
 	"literank.com/event-books/infrastructure/database"
+	"literank.com/event-books/infrastructure/mq"
 )
 
 // WireHelper is the helper for dependency injection
 type WireHelper struct {
 	sqlPersistence *database.MySQLPersistence
+	mq             *mq.KafkaQueue
 }
 
 // NewWireHelper constructs a new WireHelper
@@ -20,12 +22,22 @@ func NewWireHelper(c *config.Config) (*WireHelper, error) {
 	if err != nil {
 		return nil, err
 	}
+	mq, err := mq.NewKafkaQueue(c.MQ.Brokers, c.MQ.Topic)
+	if err != nil {
+		return nil, err
+	}
 
 	return &WireHelper{
-		sqlPersistence: db}, nil
+		sqlPersistence: db, mq: mq,
+	}, nil
 }
 
 // BookManager returns an instance of BookManager
 func (w *WireHelper) BookManager() gateway.BookManager {
 	return w.sqlPersistence
+}
+
+// MessageQueueHelper returns an instance of mq helper
+func (w *WireHelper) MessageQueueHelper() mq.Helper {
+	return w.mq
 }

@@ -27,7 +27,7 @@ type RestHandler struct {
 
 func newRestHandler(wireHelper *application.WireHelper) *RestHandler {
 	return &RestHandler{
-		bookOperator: executor.NewBookOperator(wireHelper.BookManager()),
+		bookOperator: executor.NewBookOperator(wireHelper.BookManager(), wireHelper.MessageQueueHelper()),
 	}
 }
 

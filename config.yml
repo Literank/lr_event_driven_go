@@ -4,3 +4,7 @@ app:
   templates_pattern: "adapter/templates/*.html"
 db:
   dsn: "test_user:test_pass@tcp(127.0.0.1:3306)/lr_event_book?charset=utf8mb4&parseTime=True&loc=Local"
+mq:
+  brokers:
+    - localhost:9092
+  topic: "lr-book-searches"
