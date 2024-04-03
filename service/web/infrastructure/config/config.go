@@ -3,13 +3,6 @@ Package config provides config structures and parse funcs.
 */
 package config
 
-import (
-	"fmt"
-	"os"
-
-	"gopkg.in/yaml.v3"
-)
-
 // Config is the global configuration.
 type Config struct {
 	App ApplicationConfig `json:"app" yaml:"app"`
@@ -33,18 +26,4 @@ type ApplicationConfig struct {
 type MQConfig struct {
 	Brokers []string `json:"brokers" yaml:"brokers"`
 	Topic   string   `json:"topic" yaml:"topic"`
-}
-
-// Parse parses config file and returns a Config.
-func Parse(filename string) (*Config, error) {
-	buf, err := os.ReadFile(filename)
-	if err != nil {
-		return nil, err
-	}
-	c := &Config{}
-	err = yaml.Unmarshal(buf, c)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse file %s: %v", filename, err)
-	}
-	return c, nil
 }

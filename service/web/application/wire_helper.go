@@ -4,10 +4,10 @@ Package application provides all common structures and functions of the applicat
 package application
 
 import (
-	"literank.com/event-books/domain/gateway"
-	"literank.com/event-books/infrastructure/config"
-	"literank.com/event-books/infrastructure/database"
 	"literank.com/event-books/infrastructure/mq"
+	"literank.com/event-books/service/web/domain/gateway"
+	"literank.com/event-books/service/web/infrastructure/config"
+	"literank.com/event-books/service/web/infrastructure/database"
 )
 
 // WireHelper is the helper for dependency injection

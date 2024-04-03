@@ -10,9 +10,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"literank.com/event-books/application"
-	"literank.com/event-books/application/executor"
 	"literank.com/event-books/domain/model"
+	"literank.com/event-books/service/web/application"
+	"literank.com/event-books/service/web/application/executor"
 )
 
 const (

@@ -3,16 +3,17 @@ package main
 import (
 	"fmt"
 
-	"literank.com/event-books/adapter"
-	"literank.com/event-books/application"
-	"literank.com/event-books/infrastructure/config"
+	"literank.com/event-books/infrastructure/parser"
+	"literank.com/event-books/service/web/adapter"
+	"literank.com/event-books/service/web/application"
+	"literank.com/event-books/service/web/infrastructure/config"
 )
 
 const configFileName = "config.yml"
 
 func main() {
 	// Read the config
-	c, err := config.Parse(configFileName)
+	c, err := parser.Parse[config.Config](configFileName)
 	if err != nil {
 		panic(err)
 	}

@@ -8,9 +8,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"literank.com/event-books/domain/gateway"
 	"literank.com/event-books/domain/model"
 	"literank.com/event-books/infrastructure/mq"
+	"literank.com/event-books/service/web/domain/gateway"
 )
 
 // BookOperator handles book input/output and proxies operations to the book manager.
