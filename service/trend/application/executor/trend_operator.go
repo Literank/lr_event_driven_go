@@ -20,12 +20,7 @@ func NewTrendOperator(t gateway.TrendManager) *TrendOperator {
 	return &TrendOperator{trendManager: t}
 }
 
-// CreateTrend creates a new trend
-func (o *TrendOperator) CreateTrend(ctx context.Context, t *model.Trend) (uint, error) {
-	return o.trendManager.CreateTrend(ctx, t)
-}
-
 // TopTrends gets the top trends order by hits in descending order
-func (o *TrendOperator) TopTrends(ctx context.Context, offset int) ([]*model.Trend, error) {
-	return o.trendManager.TopTrends(ctx, offset)
+func (o *TrendOperator) TopTrends(ctx context.Context, pageSize uint) ([]*model.Trend, error) {
+	return o.trendManager.TopTrends(ctx, pageSize)
 }

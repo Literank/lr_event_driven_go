@@ -4,3 +4,7 @@ cache:
   address: localhost:6379
   password: test_pass
   db: 0
+mq:
+  brokers:
+    - localhost:9094
+  topic: "lr-book-searches"

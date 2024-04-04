@@ -9,6 +9,7 @@ import (
 	"fmt"
 
 	"github.com/redis/go-redis/v9"
+
 	"literank.com/event-books/domain/model"
 )
 
@@ -41,12 +42,13 @@ func (r *RedisCache) CreateTrend(ctx context.Context, t *model.Trend) (uint, err
 	if err != nil {
 		if err == redis.Nil {
 			// Member doesn't exist, add it with initial score of 1
-			err := r.c.ZAdd(ctx, trendsKey, redis.Z{Score: 1, Member: member}).Err()
+			err = r.c.ZAdd(ctx, trendsKey, redis.Z{Score: 1, Member: member}).Err()
 			if err != nil {
 				return 0, err
 			}
+		} else {
+			return 0, err
 		}
-		return 0, err
 	}
 	score, err := r.c.ZIncrBy(ctx, trendsKey, 1, member).Result()
 	if err != nil {
@@ -65,8 +67,8 @@ func (r *RedisCache) CreateTrend(ctx context.Context, t *model.Trend) (uint, err
 	return uint(score), nil
 }
 
-func (r *RedisCache) TopTrends(ctx context.Context, offset int) ([]*model.Trend, error) {
-	topItems, err := r.c.ZRevRangeWithScores(ctx, trendsKey, 0, int64(offset)).Result()
+func (r *RedisCache) TopTrends(ctx context.Context, pageSize uint) ([]*model.Trend, error) {
+	topItems, err := r.c.ZRevRangeWithScores(ctx, trendsKey, 0, int64(pageSize)-1).Result()
 	if err != nil {
 		return nil, err
 	}
@@ -81,11 +83,17 @@ func (r *RedisCache) TopTrends(ctx context.Context, offset int) ([]*model.Trend,
 		}
 		k := queryKeyPrefix + query
 		value, err := r.c.Get(ctx, k).Result()
-		if err != nil && err != redis.Nil {
+		if err != nil {
+			if err == redis.Nil {
+				t.Books = make([]model.Book, 0)
+				trends = append(trends, t)
+				continue
+			}
 			return nil, err
-		}
-		if err := json.Unmarshal([]byte(value), &t.Books); err != nil {
-			return nil, err
+		} else {
+			if err := json.Unmarshal([]byte(value), &t.Books); err != nil {
+				return nil, err
+			}
 		}
 		trends = append(trends, t)
 	}

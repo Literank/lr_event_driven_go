@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	fieldOffset = "o"
+	fieldPageSize = "ps"
 )
 
 // RestHandler handles all restful requests
@@ -41,19 +41,19 @@ func MakeRouter(wireHelper *application.WireHelper) (*gin.Engine, error) {
 
 // Get all trends
 func (r *RestHandler) getTrends(c *gin.Context) {
-	offset := 0
-	offsetParam := c.Query(fieldOffset)
-	if offsetParam != "" {
-		value, err := strconv.Atoi(offsetParam)
+	ps := 10
+	psParam := c.Query(fieldPageSize)
+	if psParam != "" {
+		value, err := strconv.Atoi(psParam)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid offset"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid page size"})
 			return
 		}
-		offset = value
+		ps = value
 	}
-	trends, err := r.trendOperator.TopTrends(c, offset)
+	trends, err := r.trendOperator.TopTrends(c, uint(ps))
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "failed to get trends"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to get trends"})
 		return
 	}
 	c.JSON(http.StatusOK, trends)

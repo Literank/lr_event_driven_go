@@ -7,22 +7,34 @@ import (
 	"literank.com/event-books/service/trend/domain/gateway"
 	"literank.com/event-books/service/trend/infrastructure/cache"
 	"literank.com/event-books/service/trend/infrastructure/config"
+	"literank.com/event-books/service/trend/infrastructure/mq"
 )
 
 // WireHelper is the helper for dependency injection
 type WireHelper struct {
-	kvStore *cache.RedisCache
+	kvStore  *cache.RedisCache
+	consumer *mq.KafkaConsumer
 }
 
 // NewWireHelper constructs a new WireHelper
 func NewWireHelper(c *config.Config) (*WireHelper, error) {
 	kv := cache.NewRedisCache(c.Cache.Address, c.Cache.Password, c.Cache.DB)
+	consumer, err := mq.NewKafkaConsumer(c.MQ.Brokers, c.MQ.Topic)
+	if err != nil {
+		return nil, err
+	}
 	return &WireHelper{
-		kvStore: kv,
+		kvStore:  kv,
+		consumer: consumer,
 	}, nil
 }
 
 // TrendManager returns an instance of TrendManager
 func (w *WireHelper) TrendManager() gateway.TrendManager {
 	return w.kvStore
+}
+
+// TrendEventConsumer returns an instance of TrendEventConsumer
+func (w *WireHelper) TrendEventConsumer() gateway.TrendEventConsumer {
+	return w.consumer
 }

@@ -7,6 +7,7 @@ package config
 type Config struct {
 	App   ApplicationConfig `json:"app" yaml:"app"`
 	Cache CacheConfig       `json:"cache" yaml:"cache"`
+	MQ    MQConfig          `json:"mq" yaml:"mq"`
 }
 
 // ApplicationConfig is the configuration of main app.
@@ -19,4 +20,10 @@ type CacheConfig struct {
 	Address  string `json:"address" yaml:"address"`
 	Password string `json:"password" yaml:"password"`
 	DB       int    `json:"db" yaml:"db"`
+}
+
+// MQConfig is the configuration of message queues.
+type MQConfig struct {
+	Brokers []string `json:"brokers" yaml:"brokers"`
+	Topic   string   `json:"topic" yaml:"topic"`
 }

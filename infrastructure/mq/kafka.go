@@ -28,7 +28,7 @@ func NewKafkaQueue(brokers []string, topic string) (*KafkaQueue, error) {
 	return &KafkaQueue{producer, topic}, nil
 }
 
-// CreateBook creates a new book
+// SendEvent sends an event to the queue
 func (k *KafkaQueue) SendEvent(key string, value []byte) (bool, error) {
 	// Send a message
 	message := &sarama.ProducerMessage{
