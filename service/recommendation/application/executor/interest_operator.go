@@ -6,8 +6,8 @@ package executor
 import (
 	"context"
 
+	"literank.com/event-books/domain/model"
 	"literank.com/event-books/service/recommendation/domain/gateway"
-	"literank.com/event-books/service/recommendation/domain/model"
 )
 
 // InterestOperator handles trend input/output and proxies operations to the interest manager.

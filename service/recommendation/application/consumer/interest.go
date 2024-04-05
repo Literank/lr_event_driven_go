@@ -9,9 +9,8 @@ import (
 	"strings"
 
 	topgw "literank.com/event-books/domain/gateway"
-	topmodel "literank.com/event-books/domain/model"
+	"literank.com/event-books/domain/model"
 	"literank.com/event-books/service/recommendation/domain/gateway"
-	"literank.com/event-books/service/recommendation/domain/model"
 )
 
 type InterestConsumer struct {
@@ -31,7 +30,7 @@ func (c *InterestConsumer) Start(ctx context.Context) {
 			return nil
 		}
 
-		var books []*topmodel.Book
+		var books []*model.Book
 		if err := json.Unmarshal(data, &books); err != nil {
 			return err
 		}

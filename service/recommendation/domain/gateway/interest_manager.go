@@ -6,7 +6,7 @@ package gateway
 import (
 	"context"
 
-	"literank.com/event-books/service/recommendation/domain/model"
+	"literank.com/event-books/domain/model"
 )
 
 // InterestManager manages all interests

@@ -32,4 +32,5 @@ type MQConfig struct {
 // RemoteServiceConfig is the configuration of remote services.
 type RemoteServiceConfig struct {
 	TrendURL string `json:"trend_url" yaml:"trend_url"`
+	RecURL   string `json:"rec_url" yaml:"rec_url"`
 }

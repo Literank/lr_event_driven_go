@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
-	"literank.com/event-books/service/recommendation/domain/model"
+	"literank.com/event-books/domain/model"
 )
 
 const (

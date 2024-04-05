@@ -75,12 +75,18 @@ func (r *RestHandler) indexPage(c *gin.Context) {
 		log.Printf("Failed to get trends: %v", err)
 		trends = make([]*model.Trend, 0)
 	}
+	interests, err := r.bookOperator.GetInterests(c, r.remoteConfig.RecURL+userID)
+	if err != nil {
+		log.Printf("Failed to get interests: %v", err)
+		interests = make([]*model.Interest, 0)
+	}
 	// Render the HTML template named "index.html"
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"title":  "LiteRank Book Store",
-		"books":  books,
-		"trends": trends,
-		"q":      q,
+		"title":           "LiteRank Book Store",
+		"books":           books,
+		"trends":          trends,
+		"recommendations": interests,
+		"q":               q,
 	})
 }
 

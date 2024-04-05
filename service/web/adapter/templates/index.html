@@ -57,17 +57,13 @@
         <!-- Recommended for You Section -->
         <div>
             <h2 class="text-2xl font-bold mb-4">Recommended for You</h2>
-            <div class="grid grid-cols-2 gap-4 font-mono">
-                <!-- Recommended items can be dynamically generated here -->
-                <div class="bg-white p-2 rounded-md border-gray-300 shadow">
-                    Recommended Book 1
-                </div>
-                <div class="bg-white p-2 rounded-md border-gray-300 shadow">
-                    Recommended Book 2
-                </div>
-                <div class="bg-white p-2 rounded-md border-gray-300 shadow">
-                    Recommended Book 3
-                </div>
+            <div class="grid grid-cols-4 gap-2 font-mono">
+                {{range .recommendations}}
+                    <div class="bg-white p-4 rounded-md border-gray-300 shadow mt-2">
+                        <div class="text-lg font-bold">{{.Title}}</div>
+                        <span class="font-serif italic text-sm">{{.Author}}</span>
+                    </div>
+                {{end}}
             </div>
         </div>
     </div>

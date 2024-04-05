@@ -61,3 +61,12 @@ func (o *BookOperator) GetTrends(ctx context.Context, trendURL string) ([]*model
 	}
 	return trends, nil
 }
+
+// GetInterests gets a list of user interests from the remote service
+func (o *BookOperator) GetInterests(ctx context.Context, interestURL string) ([]*model.Interest, error) {
+	var interests []*model.Interest
+	if err := remote.HttpFetch(ctx, interestURL, &interests); err != nil {
+		return nil, err
+	}
+	return interests, nil
+}
