@@ -1,0 +1,25 @@
+digraph TrendService {
+    rankdir=LR;
+    node [shape=box];
+
+    subgraph cluster_consumer {
+        label="Events Consuming";
+        style=dashed;
+        color=lightblue;
+
+        Consumer -> MessageQueue;
+    }
+    
+    Consumer -> Engine;
+    Engine -> DB;
+    APIServer -> DB;
+    
+    User -> APIServer;
+
+    MessageQueue [shape=box, label="MessageQueue\n(Kafka)"];
+    DB [shape=cylinder, label="Database\n(monogoDB)"];
+    Consumer [shape=ellipse];
+    APIServer [shape=ellipse, label="API Server\n(Gin)"];
+    User[shape=none, label="Client Users"]
+    Engine[shape=ellipse, label="Recommendation\nEngine", style=dashed]
+}
