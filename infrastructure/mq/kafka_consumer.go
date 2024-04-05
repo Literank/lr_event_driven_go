@@ -5,7 +5,6 @@ package mq
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/IBM/sarama"
@@ -27,7 +26,6 @@ func NewKafkaConsumer(brokers []string, topic, groupID string) (*KafkaConsumer, 
 	config.Consumer.Offsets.Initial = sarama.OffsetOldest
 
 	// Create consumer
-	fmt.Println(brokers)
 	consumer, err := sarama.NewConsumerGroup(brokers, groupID, config)
 	if err != nil {
 		return nil, err
