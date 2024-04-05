@@ -36,18 +36,19 @@ func (o *BookOperator) CreateBook(ctx context.Context, b *model.Book) (*model.Bo
 }
 
 // GetBooks gets a list of books by offset and keyword, and caches its result if needed
-func (o *BookOperator) GetBooks(ctx context.Context, offset int, query string) ([]*model.Book, error) {
+func (o *BookOperator) GetBooks(ctx context.Context, offset int, userID, query string) ([]*model.Book, error) {
 	books, err := o.bookManager.GetBooks(ctx, offset, query)
 	if err != nil {
 		return nil, err
 	}
-	// Send search query and its results
+	// Send a user's search query and its results
 	if query != "" {
+		k := query + ":" + userID
 		jsonData, err := json.Marshal(books)
 		if err != nil {
 			return nil, fmt.Errorf("failed to send event due to %w", err)
 		}
-		o.mqHelper.SendEvent(query, jsonData)
+		o.mqHelper.SendEvent(k, jsonData)
 	}
 	return books, nil
 }

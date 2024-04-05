@@ -6,8 +6,10 @@ package adapter
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -20,6 +22,7 @@ import (
 const (
 	fieldOffset = "o"
 	fieldQuery  = "q"
+	fieldUID    = "uid"
 )
 
 // RestHandler handles all restful requests
@@ -54,8 +57,14 @@ func MakeRouter(templates_pattern string, remote *config.RemoteServiceConfig, wi
 
 // Render and show the index page
 func (r *RestHandler) indexPage(c *gin.Context) {
+	userID, err := c.Cookie(fieldUID)
+	if err != nil {
+		// Doesn't exist, make a new one
+		userID = randomString(5)
+		c.SetCookie(fieldUID, userID, 3600*24*30, "/", "", false, false)
+	}
 	q := c.Query(fieldQuery)
-	books, err := r.bookOperator.GetBooks(c, 0, q)
+	books, err := r.bookOperator.GetBooks(c, 0, userID, q)
 	if err != nil {
 		c.String(http.StatusNotFound, "failed to get books")
 		return
@@ -87,7 +96,7 @@ func (r *RestHandler) getBooks(c *gin.Context) {
 		}
 		offset = value
 	}
-	books, err := r.bookOperator.GetBooks(c, offset, c.Query(fieldQuery))
+	books, err := r.bookOperator.GetBooks(c, offset, "", c.Query(fieldQuery))
 	if err != nil {
 		fmt.Printf("Failed to get books: %v\n", err)
 		c.JSON(http.StatusNotFound, gin.H{"error": "failed to get books"})
@@ -111,4 +120,15 @@ func (r *RestHandler) createBook(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusCreated, book)
+}
+
+func randomString(length int) string {
+	source := rand.NewSource(time.Now().UnixNano())
+	random := rand.New(source)
+	const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	result := make([]byte, length)
+	for i := range result {
+		result[i] = charset[random.Intn(len(charset))]
+	}
+	return string(result)
 }
