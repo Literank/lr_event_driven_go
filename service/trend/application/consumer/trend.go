@@ -6,6 +6,7 @@ package consumer
 import (
 	"context"
 	"encoding/json"
+	"strings"
 
 	topgw "literank.com/event-books/domain/gateway"
 	"literank.com/event-books/domain/model"
@@ -23,8 +24,10 @@ func NewTrendConsumer(t gateway.TrendManager, e topgw.EventConsumer) *TrendConsu
 
 func (c *TrendConsumer) Start(ctx context.Context) {
 	c.eventConsumer.ConsumeEvents(ctx, func(key, data []byte) error {
+		parts := strings.Split(string(key), ":")
+		query := parts[0]
 		t := &model.Trend{
-			Query: string(key),
+			Query: query,
 		}
 		if err := json.Unmarshal(data, &t.Books); err != nil {
 			return err
