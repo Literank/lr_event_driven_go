@@ -10,6 +10,7 @@ import (
 
 	"literank.com/event-books/domain/model"
 	"literank.com/event-books/infrastructure/mq"
+	"literank.com/event-books/infrastructure/remote"
 	"literank.com/event-books/service/web/domain/gateway"
 )
 
@@ -49,4 +50,13 @@ func (o *BookOperator) GetBooks(ctx context.Context, offset int, query string) (
 		o.mqHelper.SendEvent(query, jsonData)
 	}
 	return books, nil
+}
+
+// GetTrends gets a list of trends from the remote service
+func (o *BookOperator) GetTrends(ctx context.Context, trendURL string) ([]*model.Trend, error) {
+	var trends []*model.Trend
+	if err := remote.HttpFetch(ctx, trendURL, &trends); err != nil {
+		return nil, err
+	}
+	return trends, nil
 }

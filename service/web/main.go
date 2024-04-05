@@ -25,7 +25,7 @@ func main() {
 	}
 
 	// Build main router
-	r, err := adapter.MakeRouter(c.App.TemplatesPattern, wireHelper)
+	r, err := adapter.MakeRouter(c.App.TemplatesPattern, &c.Remote, wireHelper)
 	if err != nil {
 		panic(err)
 	}

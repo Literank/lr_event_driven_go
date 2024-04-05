@@ -5,9 +5,10 @@ package config
 
 // Config is the global configuration.
 type Config struct {
-	App ApplicationConfig `json:"app" yaml:"app"`
-	DB  DBConfig          `json:"db" yaml:"db"`
-	MQ  MQConfig          `json:"mq" yaml:"mq"`
+	App    ApplicationConfig   `json:"app" yaml:"app"`
+	DB     DBConfig            `json:"db" yaml:"db"`
+	MQ     MQConfig            `json:"mq" yaml:"mq"`
+	Remote RemoteServiceConfig `json:"remote" yaml:"remote"`
 }
 
 // DBConfig is the configuration of databases.
@@ -26,4 +27,9 @@ type ApplicationConfig struct {
 type MQConfig struct {
 	Brokers []string `json:"brokers" yaml:"brokers"`
 	Topic   string   `json:"topic" yaml:"topic"`
+}
+
+// RemoteServiceConfig is the configuration of remote services.
+type RemoteServiceConfig struct {
+	TrendURL string `json:"trend_url" yaml:"trend_url"`
 }

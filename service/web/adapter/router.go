@@ -5,6 +5,7 @@ package adapter
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -13,6 +14,7 @@ import (
 	"literank.com/event-books/domain/model"
 	"literank.com/event-books/service/web/application"
 	"literank.com/event-books/service/web/application/executor"
+	"literank.com/event-books/service/web/infrastructure/config"
 )
 
 const (
@@ -22,18 +24,20 @@ const (
 
 // RestHandler handles all restful requests
 type RestHandler struct {
+	remoteConfig *config.RemoteServiceConfig
 	bookOperator *executor.BookOperator
 }
 
-func newRestHandler(wireHelper *application.WireHelper) *RestHandler {
+func newRestHandler(remote *config.RemoteServiceConfig, wireHelper *application.WireHelper) *RestHandler {
 	return &RestHandler{
+		remoteConfig: remote,
 		bookOperator: executor.NewBookOperator(wireHelper.BookManager(), wireHelper.MessageQueueHelper()),
 	}
 }
 
 // MakeRouter makes the main router
-func MakeRouter(templates_pattern string, wireHelper *application.WireHelper) (*gin.Engine, error) {
-	rest := newRestHandler(wireHelper)
+func MakeRouter(templates_pattern string, remote *config.RemoteServiceConfig, wireHelper *application.WireHelper) (*gin.Engine, error) {
+	rest := newRestHandler(remote, wireHelper)
 	// Create a new Gin router
 	r := gin.Default()
 	// Load HTML templates from the templates directory
@@ -56,11 +60,18 @@ func (r *RestHandler) indexPage(c *gin.Context) {
 		c.String(http.StatusNotFound, "failed to get books")
 		return
 	}
+	trends, err := r.bookOperator.GetTrends(c, r.remoteConfig.TrendURL)
+	if err != nil {
+		// It's not a must-have, just log the error
+		log.Printf("Failed to get trends: %v", err)
+		trends = make([]*model.Trend, 0)
+	}
 	// Render the HTML template named "index.html"
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"title": "LiteRank Book Store",
-		"books": books,
-		"q":     q,
+		"title":  "LiteRank Book Store",
+		"books":  books,
+		"trends": trends,
+		"q":      q,
 	})
 }
 

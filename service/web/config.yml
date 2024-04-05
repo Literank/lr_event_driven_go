@@ -8,3 +8,5 @@ mq:
   brokers:
     - localhost:9094
   topic: "lr-book-searches"
+remote:
+  trend_url: "http://localhost:8081/trends"
