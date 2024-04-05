@@ -26,4 +26,5 @@ type CacheConfig struct {
 type MQConfig struct {
 	Brokers []string `json:"brokers" yaml:"brokers"`
 	Topic   string   `json:"topic" yaml:"topic"`
+	GroupID string   `json:"group_id" yaml:"group_id"`
 }

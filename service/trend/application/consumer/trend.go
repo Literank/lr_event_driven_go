@@ -7,16 +7,17 @@ import (
 	"context"
 	"encoding/json"
 
+	topgw "literank.com/event-books/domain/gateway"
 	"literank.com/event-books/domain/model"
 	"literank.com/event-books/service/trend/domain/gateway"
 )
 
 type TrendConsumer struct {
 	trendManager  gateway.TrendManager
-	eventConsumer gateway.TrendEventConsumer
+	eventConsumer topgw.EventConsumer
 }
 
-func NewTrendConsumer(t gateway.TrendManager, e gateway.TrendEventConsumer) *TrendConsumer {
+func NewTrendConsumer(t gateway.TrendManager, e topgw.EventConsumer) *TrendConsumer {
 	return &TrendConsumer{trendManager: t, eventConsumer: e}
 }
 
@@ -33,6 +34,6 @@ func (c *TrendConsumer) Start(ctx context.Context) {
 	})
 }
 
-func (c *TrendConsumer) EventConsumer() gateway.TrendEventConsumer {
+func (c *TrendConsumer) EventConsumer() topgw.EventConsumer {
 	return c.eventConsumer
 }

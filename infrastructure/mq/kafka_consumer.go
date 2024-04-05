@@ -10,11 +10,7 @@ import (
 
 	"github.com/IBM/sarama"
 
-	"literank.com/event-books/service/trend/domain/gateway"
-)
-
-const (
-	groupID = "trend-svr"
+	"literank.com/event-books/domain/gateway"
 )
 
 // KafkaConsumer consumers events from the kafka queue
@@ -24,7 +20,7 @@ type KafkaConsumer struct {
 }
 
 // NewKafkaConsumer constructs a new KafkaConsumer
-func NewKafkaConsumer(brokers []string, topic string) (*KafkaConsumer, error) {
+func NewKafkaConsumer(brokers []string, topic, groupID string) (*KafkaConsumer, error) {
 	// Create a new consumer configuration
 	config := sarama.NewConfig()
 	config.Consumer.Group.Rebalance.Strategy = sarama.NewBalanceStrategyRoundRobin()
